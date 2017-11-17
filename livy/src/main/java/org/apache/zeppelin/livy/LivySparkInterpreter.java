@@ -44,7 +44,7 @@ public class LivySparkInterpreter extends BaseLivyInterpreter {
   protected String extractWebUIAddress() throws LivyException {
     return extractStatementResult(
         interpret(
-            "sc.getClass.getMethod(\"uiWebUrl\").invoke(sc)", null, false, false)
+            "sc.getClass.getMethod(\"uiWebUrl\").invoke(sc).get", null, false, false)
             .message().get(0).getData());
   }
 
