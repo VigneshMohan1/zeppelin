@@ -80,6 +80,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
   // keep tracking the mapping between paragraphId and statementId, so that we can cancel the
   // statement after we execute it.
   private ConcurrentHashMap<String, Integer> paragraphId2StmtIdMapping = new ConcurrentHashMap<>();
+  private ConcurrentHashMap<String, Integer> paragraphId2StmtProgressMap = new ConcurrentHashMap<>();
 
   public BaseLivyInterpreter(Properties property) {
     super(property);
@@ -194,7 +195,13 @@ public abstract class BaseLivyInterpreter extends Interpreter {
 
   @Override
   public int getProgress(InterpreterContext context) {
-    return 0;
+
+   if (livyVersion.isGetProgressSupported()) {
+     String paraId = context.getParagraphId();
+     Integer progress = paragraphId2StmtProgressMap.get(paraId);
+     return progress == null ? 0 : progress;
+   }
+   return 0;
   }
 
   private SessionInfo createSession(String user, String kind)
@@ -275,6 +282,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
           throw new LivyException(e);
         }
         stmtInfo = getStatementInfo(stmtInfo.id);
+        paragraphId2StmtProgressMap.put(paragraphId, (int) (stmtInfo.progress * 100));
       }
       if (appendSessionExpired) {
         return appendSessionExpire(getResultFromStatementInfo(stmtInfo, displayAppInfo),
@@ -635,6 +643,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
     public Integer id;
     public String state;
     public StatementOutput output;
+    public double progress;
 
     public StatementInfo() {
     }
