@@ -282,7 +282,9 @@ public abstract class BaseLivyInterpreter extends Interpreter {
           throw new LivyException(e);
         }
         stmtInfo = getStatementInfo(stmtInfo.id);
-        paragraphId2StmtProgressMap.put(paragraphId, (int) (stmtInfo.progress * 100));
+        if (paragraphId!=null) {
+          paragraphId2StmtProgressMap.put(paragraphId, (int) (stmtInfo.progress * 100));
+        }
       }
       if (appendSessionExpired) {
         return appendSessionExpire(getResultFromStatementInfo(stmtInfo, displayAppInfo),
