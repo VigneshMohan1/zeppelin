@@ -171,6 +171,15 @@ public abstract class BaseLivyInterpreter extends Interpreter {
 
   @Override
   public void cancel(InterpreterContext context) {
+    try {
+      this.livyVersion = getLivyVersion();
+      LOGGER.info("Use livy " + livyVersion);
+    } catch (APINotFoundException e) {
+      this.livyVersion = new LivyVersion("0.2.0");
+      LOGGER.info("Use livy 0.2.0");
+    } catch (LivyException e) {
+      e.printStackTrace();
+    }
     if (livyVersion.isCancelSupported()) {
       String paraId = context.getParagraphId();
       Integer stmtId = paragraphId2StmtIdMapping.get(paraId);
