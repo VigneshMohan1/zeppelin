@@ -333,7 +333,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
   private InterpreterResult getResultFromStatementInfo(StatementInfo stmtInfo,
                                                        boolean displayAppInfo) {
     if (stmtInfo.output != null && stmtInfo.output.isError()) {
-      return new InterpreterResult(InterpreterResult.Code.ERROR, stmtInfo.output.evalue);
+      return new InterpreterResult(InterpreterResult.Code.ERROR, stmtInfo.output.evalue + "\n" +stmtInfo.output.traceback);
     } else if (stmtInfo.isCancelled()) {
       // corner case, output might be null if it is cancelled.
       return new InterpreterResult(InterpreterResult.Code.ERROR, "Job is cancelled");
