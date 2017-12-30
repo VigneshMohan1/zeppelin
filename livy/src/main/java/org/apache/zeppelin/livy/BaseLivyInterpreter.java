@@ -183,6 +183,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
     if (livyVersion.isCancelSupported()) {
       String paraId = context.getParagraphId();
       Integer stmtId = paragraphId2StmtIdMapping.get(paraId);
+      LOGGER.info("Cancelling statement with : "+stmtId+" and with para id : "+paraId);
       try {
         if (stmtId != null) {
           LOGGER.error("Cancelling statement : "+stmtId);
