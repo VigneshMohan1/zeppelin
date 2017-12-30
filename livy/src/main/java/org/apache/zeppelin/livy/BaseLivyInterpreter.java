@@ -176,6 +176,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
       Integer stmtId = paragraphId2StmtIdMapping.get(paraId);
       try {
         if (stmtId != null) {
+          LOGGER.error("Cancelling statement : "+stmtId);
           cancelStatement(stmtId);
         }
       } catch (LivyException e) {
