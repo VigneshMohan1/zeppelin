@@ -378,8 +378,8 @@ public abstract class BaseLivyInterpreter extends Interpreter {
             || result.startsWith("<script")
             || result.startsWith("<style")
             || result.startsWith("<div")) {
-          LOGGER.info("Getting result : "+result);
           result = "%html " + result;
+          LOGGER.info("Getting result : "+result);
         }
       }
 
