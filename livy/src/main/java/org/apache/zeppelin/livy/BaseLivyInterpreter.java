@@ -378,6 +378,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
             || result.startsWith("<script")
             || result.startsWith("<style")
             || result.startsWith("<div")) {
+          LOGGER.info("Getting result : "+result);
           result = "%html " + result;
         }
       }
@@ -505,7 +506,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
   private String callRestAPI(String targetURL, String method, String jsonData)
       throws LivyException {
     targetURL = livyURL + targetURL;
-    LOGGER.debug("Call rest api in {}, method: {}, jsonData: {}", targetURL, method, jsonData);
+    LOGGER.info("Call rest api in {}, method: {}, jsonData: {}", targetURL, method, jsonData);
     HttpHeaders headers = new HttpHeaders();
     headers.add("Content-Type", "application/json");
     headers.add("X-Requested-By", "zeppelin");
@@ -540,7 +541,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
     if (response == null) {
       throw new LivyException("No http response returned");
     }
-    LOGGER.debug("Get response, StatusCode: {}, responseBody: {}", response.getStatusCode(),
+    LOGGER.info("Get response, StatusCode: {}, responseBody: {}", response.getStatusCode(),
         response.getBody());
     if (response.getStatusCode().value() == 200
         || response.getStatusCode().value() == 201) {
