@@ -257,7 +257,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
         stmtInfo = executeStatement(new ExecuteRequest(code));
       }
       if (paragraphId != null) {
-        paragraphId2StmtIdMapping.put(paragraphId, stmtInfo.id);
+        paragraphId2StmtProgressMap.put(paragraphId, stmtInfo.id);
       }
       // pull the statement status
       while (!stmtInfo.isAvailable()) {
@@ -268,6 +268,9 @@ public abstract class BaseLivyInterpreter extends Interpreter {
           throw new LivyException(e);
         }
         stmtInfo = getStatementInfo(stmtInfo.id);
+        if (paragraphId != null) {
+          paragraphId2StmtProgressMap.put(paragraphId, (int) (stmtInfo.progress * 100));
+        }
         if (paragraphId != null && paragraphsToCancel.contains(paragraphId)) {
           cancel(stmtInfo.id, paragraphId);
           return new InterpreterResult(InterpreterResult.Code.ERROR, "Job is cancelled");
