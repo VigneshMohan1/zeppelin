@@ -73,6 +73,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
   protected boolean displayAppInfo;
   protected LivyVersion livyVersion;
   private RestTemplate restTemplate;
+  private String yarnProxyServerURL;
 
   // keep tracking the mapping between paragraphId and statementId, so that we can cancel the
   // statement after we execute it.
@@ -90,6 +91,7 @@ public abstract class BaseLivyInterpreter extends Interpreter {
         property.getProperty("zeppelin.livy.session.create_timeout", 120 + ""));
     this.pullStatusInterval = Integer.parseInt(
         property.getProperty("zeppelin.livy.pull_status.interval.millis", 1000 + ""));
+    this.yarnProxyServerURL = property.getProperty("zeppelin.livy.spark.yarnProxy.url");
     this.restTemplate = createRestTemplate();
   }
 
@@ -388,9 +390,14 @@ public abstract class BaseLivyInterpreter extends Interpreter {
       if (displayAppInfo) {
         InterpreterResult interpreterResult = new InterpreterResult(InterpreterResult.Code.SUCCESS);
         interpreterResult.add(result);
+        String yarnProxyUI = sessionInfo.webUIAddress;
+        if (yarnProxyServerURL!=null) {
+          String ip = sessionInfo.webUIAddress.split("/")[2].split(":")[0];
+          yarnProxyUI = sessionInfo.webUIAddress.replace(ip, yarnProxyServerURL).replace("http", "https");
+        }
         String appInfoHtml = "<hr/>Spark Application Id: " + sessionInfo.appId + "<br/>"
-            + "Spark WebUI: <a href=\"" + sessionInfo.webUIAddress + "\">"
-            + sessionInfo.webUIAddress + "</a>";
+            + "Spark WebUI: <a href=\"" + yarnProxyUI + "\">"
+            + yarnProxyUI + "</a>";
         interpreterResult.add(InterpreterResult.Type.HTML, appInfoHtml);
         return interpreterResult;
       } else {
